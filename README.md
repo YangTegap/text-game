@@ -34,25 +34,59 @@ This game addresses the exact problem you described - it combines the **freedom*
 
 ### Requirements
 - Python 3.6 or higher (no external dependencies!)
+- tkinter (for GUI mode - usually included with Python)
 
 ### Running the Game
 
+**Option 1: Interactive Launcher (Recommended)**
+```bash
+python play.py
+```
+
+This gives you a menu to choose between:
+- Terminal mode (classic command-line)
+- GUI mode (graphical window with terminal-style interface)
+
+**Option 2: Terminal Mode Directly**
 ```bash
 python main.py
 ```
 
 Or:
-
 ```bash
 python game_engine.py
 ```
 
 Or make it executable:
-
 ```bash
 chmod +x main.py
 ./main.py
 ```
+
+**Option 3: GUI Mode Directly**
+```bash
+python game_gui.py
+```
+
+Or:
+```bash
+chmod +x game_gui.py
+./game_gui.py
+```
+
+### GUI Mode Features
+
+The GUI version provides a user-friendly graphical interface that looks like a classic terminal:
+
+- **Retro Terminal Look** - Dark background with green/cyan text
+- **Easy to Use** - No need to know how terminals work
+- **Menu Bar** - New Game, Save, Load, and Help options
+- **Command History** - Use Up/Down arrow keys to recall previous commands
+- **Adjustable Font Size** - View menu to increase/decrease text size
+- **Mouse Support** - Scroll through game history with mouse wheel
+- **Cross-Platform** - Works on Windows, Mac, and Linux
+
+Perfect for players who aren't comfortable with command-line interfaces!
 
 ## How to Play
 
@@ -149,6 +183,20 @@ The game is built with a modular architecture:
 - Coordinates all systems
 - Handles user interaction
 - Win/lose conditions
+
+**main.py** - Terminal mode entry point
+- Command-line interface version
+- Classic text adventure experience
+
+**game_gui.py** - GUI mode entry point
+- Graphical window interface
+- Terminal-style look with modern convenience
+- Menu-driven save/load
+- Command history with arrow keys
+
+**play.py** - Interactive launcher
+- Lets you choose between terminal or GUI mode
+- User-friendly entry point
 
 ## Extending the Game
 
@@ -257,6 +305,20 @@ journal, knife
 ## Save Files
 
 Save files are stored as `savegame.json` in the game directory. They're human-readable JSON and contain your complete game state.
+
+## Additional Documentation
+
+- **GUI_GUIDE.md** - Complete guide to using the graphical interface mode
+  - How to start GUI mode
+  - Interface overview
+  - Features and keyboard shortcuts
+  - Troubleshooting GUI-specific issues
+
+- **WALKTHROUGH.md** - Complete solution guide (spoilers!)
+  - Step-by-step puzzle solutions
+  - Item locations
+  - Speedrun guide
+  - Easter eggs
 
 ## Troubleshooting
 

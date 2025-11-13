@@ -160,6 +160,21 @@ def test_invalid_commands():
     print("Invalid Commands tests passed!\n")
 
 
+def test_gui_imports():
+    """Test that GUI can be imported (doesn't test actual GUI functionality)."""
+    print("Testing GUI Imports...")
+    try:
+        import game_gui
+        print("  ✓ GUI module imports successfully")
+        import tkinter as tk
+        print("  ✓ tkinter is available")
+        print("GUI Imports tests passed!\n")
+    except ImportError as e:
+        print(f"  ⚠ Warning: GUI not available ({e})")
+        print("  This is OK - GUI mode will not be available but terminal mode works.")
+        print()
+
+
 def main():
     """Run all tests."""
     print("=" * 60)
@@ -173,12 +188,15 @@ def main():
         test_game_flow()
         test_puzzle_mechanics()
         test_invalid_commands()
+        test_gui_imports()
 
         print("=" * 60)
         print("ALL TESTS PASSED! ✓")
         print("=" * 60)
         print("\nThe game is working correctly!")
-        print("Run 'python main.py' to play the game.")
+        print("Run 'python play.py' for the launcher")
+        print("Run 'python main.py' for terminal mode")
+        print("Run 'python game_gui.py' for GUI mode")
 
     except AssertionError as e:
         print(f"\n❌ TEST FAILED: {e}")

@@ -6,6 +6,21 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 
 The Forgotten Mansion is a text-based adventure game that combines natural language parsing with strict rule-based world validation. The key design principle: players can phrase commands naturally, but can only interact with objects that actually exist in the game world (no AI-generated content).
 
+## Quick Reference
+
+```bash
+# Run the game
+python play.py              # GUI mode (recommended)
+python main.py              # Terminal mode
+
+# Test everything
+python test_game.py         # Run all tests
+
+# Test specific functionality (run individual functions)
+python -c "from test_game import test_parser; test_parser()"
+python -c "from test_game import test_puzzle_mechanics; test_puzzle_mechanics()"
+```
+
 ## Development Commands
 
 ### Running the Game
@@ -79,7 +94,10 @@ User Input → Parser → Validator → Game Logic → Game State → Response
 - `get_world_data()` returns complete world structure
 - Rooms have: name, description, exits, objects
 - Objects have: name, aliases, description, takeable, visible, interactions, room_description
-- Exits can be simple strings or dicts with `locked`, `locked_message`, `destination`
+- **Exit formats** (critical distinction):
+  - Simple: `'north': 'room_id'` - Always accessible
+  - Complex: `'north': {'destination': 'room_id', 'locked': True, 'locked_message': 'text', 'hidden': False}`
+  - Hidden exits (`'hidden': True`) don't appear in exit list but are still accessible
 - **Key insight**: This is where ALL content lives - parser/logic are generic
 
 ## Adding Content
@@ -101,26 +119,49 @@ Edit `world.py` in the `rooms` dictionary:
 ### Adding a New Object
 ```python
 {
-    'name': 'primary_name',  # Used in inventory
-    'aliases': ['alt1', 'alt2'],  # Parser matches these too
+    'name': 'primary_name',  # Used in inventory and as primary identifier
+    'aliases': ['alt1', 'alt2'],  # Parser matches these too (case-insensitive)
     'description': 'Shown when examining',
-    'takeable': True,  # Can be picked up?
-    'visible': True,  # Shows in room description?
+    'takeable': True,  # Can be picked up? Default: True if omitted
+    'visible': True,  # Shows in room description? Default: True if omitted
     'room_description': 'A key lies here.',  # How it appears in room
     'interactions': {
         'read': 'Response when player reads it',
         'search': 'Response when player searches it',
         'use': 'Response when player uses it'
+        # Supported: read, search, use, open, close, push, pull, turn, eat, drink
     },
     'points': 10  # Added to score when taken (optional)
 }
 ```
 
+**Object Property Reference:**
+- `name` (required): Primary identifier, shown in inventory
+- `aliases` (optional): List of alternative names for parser matching
+- `description` (required): Text shown when player examines object
+- `takeable` (optional): Boolean, defaults to True. Set to False for scenery/furniture
+- `visible` (optional): Boolean, defaults to True. Set to False to hide from room description
+- `room_description` (optional): Custom text for how object appears in room
+- `interactions` (optional): Dict of action → response text for object-specific behavior
+- `points` (optional): Integer score added when object is taken
+
 ### Adding a New Command
-1. Add synonyms to `parser.py` in `action_synonyms` dict
-2. Add handler method to `game_logic.py` (e.g., `def new_action(self, target):`)
-3. Wire it in `execute_command()` handlers dict
-4. Update help text in `parser.py: get_help_text()`
+1. Add synonyms to `parser.py` in `action_synonyms` dict:
+   ```python
+   'myaction': ['myaction', 'synonym1', 'synonym2'],
+   ```
+2. Add handler method to `game_logic.py`:
+   ```python
+   def my_action(self, target):
+       """Handler for myaction command."""
+       # Implementation here
+       return "Result message"
+   ```
+3. Wire it in `execute_command()` handlers dict:
+   ```python
+   'myaction': lambda: self.my_action(target),
+   ```
+4. Update help text in `parser.py: get_help_text()` to document the command
 
 ### Adding a Puzzle
 Puzzles are implemented in `game_logic.py` with special case handling:
@@ -203,6 +244,45 @@ Key invariant: An object exists in exactly ONE place:
 Taking an item: removes from room, adds to inventory
 Dropping an item: removes from inventory, adds to current room
 Searching reveals item: adds new object to room (not in any room before)
+
+## State Modification API Reference
+
+When implementing game logic, use these GameState methods (never modify state.world directly except through these APIs):
+
+**Inventory Management:**
+- `add_to_inventory(object_name)` - Take object from room, add to inventory, award points
+- `remove_from_inventory(object_name)` - Remove from inventory, returns object data
+- `drop_in_room(object_name)` - Remove from inventory and place in current room
+- `is_in_inventory(object_name)` - Check if player has object
+
+**Room Objects:**
+- `add_object_to_room(object_data, room_id=None)` - Add new object to room (current room if None)
+- `remove_object_from_room(object_name)` - Permanently delete object from room
+- `is_in_current_room(object_name)` - Check if object exists in current room
+- `get_object_from_room(object_name)` - Get object data from current room
+- `get_object_anywhere(object_name)` - Find object in room or inventory
+
+**Navigation:**
+- `move_to_room(room_id)` - Move player to room, increments turns, tracks visited rooms
+- `unlock_exit(direction, room_id=None)` - Unlock a door/exit (sets locked=False on exit dict)
+
+**Game State:**
+- `set_flag(flag_name, value=True)` - Store puzzle state or event completion
+- `get_flag(flag_name, default=False)` - Retrieve puzzle state
+- `get_room_description(include_objects=True)` - Get formatted room description
+
+## Common Pitfalls and Gotchas
+
+1. **Object matching is case-insensitive**: "Knife" matches "knife" and all aliases
+2. **Exits must be in exits dict**: Can't move to a room unless exit is defined (even if room exists)
+3. **Non-takeable objects**: Must explicitly set `'takeable': False` for furniture/scenery
+4. **Invisible objects**: Set `'visible': False` for hidden items that shouldn't appear in room description
+5. **Exit format matters**: String exits are always open, dict exits can be locked
+6. **Flags prevent repetition**: Always check `get_flag()` before executing one-time events (like revealing hidden items)
+7. **Object state is mutable**: Objects exist in ONE place - room OR inventory, never both
+8. **Inventory uses primary name**: Even if player types alias, inventory stores obj['name']
+9. **Parser match priority**: Multi-word synonyms matched before single words ("pick up" before "pick")
+10. **Use secondary target**: For "use X on Y" commands, X is target, Y is secondary
 
 ## Dependencies
 

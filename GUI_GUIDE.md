@@ -7,8 +7,8 @@ The Forgotten Mansion includes a graphical user interface (GUI) mode that provid
 ### Method 1: Using the Launcher (Easiest)
 
 **Windows:**
-- Double-click `play.bat`
-- The GUI window will open automatically!
+- Double-click `play.vbs`
+- The GUI window will open automatically (no console window!)
 
 **Mac/Linux:**
 - Double-click `play.sh` (or right-click → Open With → Terminal)

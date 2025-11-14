@@ -47,7 +47,7 @@ python play.py
 ```
 
 Or double-click:
-- **Windows**: `play.bat`
+- **Windows**: `play.vbs` (no console window!)
 - **Mac/Linux**: `play.sh` (or right-click → "Open With" → Terminal)
 
 This launches the GUI window with the terminal-style interface - perfect for players who want a user-friendly experience!

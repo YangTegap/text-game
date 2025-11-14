@@ -194,9 +194,9 @@ def main():
         print("ALL TESTS PASSED! ✓")
         print("=" * 60)
         print("\nThe game is working correctly!")
-        print("Run 'python play.py' for the launcher")
-        print("Run 'python main.py' for terminal mode")
-        print("Run 'python game_gui.py' for GUI mode")
+        print("\nTo play:")
+        print("  GUI mode (recommended): python play.py")
+        print("  Terminal mode: python main.py")
 
     except AssertionError as e:
         print(f"\n❌ TEST FAILED: {e}")

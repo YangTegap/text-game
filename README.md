@@ -38,16 +38,24 @@ This game addresses the exact problem you described - it combines the **freedom*
 
 ### Running the Game
 
-**Option 1: Interactive Launcher (Recommended)**
+**Option 1: GUI Mode (Recommended for Most Users)**
+
+Launch the graphical interface version:
+
 ```bash
 python play.py
 ```
 
-This gives you a menu to choose between:
-- Terminal mode (classic command-line)
-- GUI mode (graphical window with terminal-style interface)
+Or double-click:
+- **Windows**: `play.bat`
+- **Mac/Linux**: `play.sh` (or right-click → "Open With" → Terminal)
 
-**Option 2: Terminal Mode Directly**
+This launches the GUI window with the terminal-style interface - perfect for players who want a user-friendly experience!
+
+**Option 2: Terminal Mode (For Command-Line Enthusiasts)**
+
+For the classic command-line experience:
+
 ```bash
 python main.py
 ```
@@ -63,7 +71,10 @@ chmod +x main.py
 ./main.py
 ```
 
-**Option 3: GUI Mode Directly**
+**Option 3: Direct GUI Launch (Alternative)**
+
+You can also launch the GUI directly:
+
 ```bash
 python game_gui.py
 ```
@@ -194,9 +205,9 @@ The game is built with a modular architecture:
 - Menu-driven save/load
 - Command history with arrow keys
 
-**play.py** - Interactive launcher
-- Lets you choose between terminal or GUI mode
-- User-friendly entry point
+**play.py** - GUI launcher
+- Directly launches the GUI mode
+- User-friendly entry point (recommended for most users)
 
 ## Extending the Game
 

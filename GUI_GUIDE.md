@@ -8,11 +8,12 @@ The Forgotten Mansion includes a graphical user interface (GUI) mode that provid
 
 **Windows:**
 - Double-click `play.bat`
-- Select option 2 for GUI mode
+- The GUI window will open automatically!
 
 **Mac/Linux:**
-- Run `./play.sh` or `python play.py`
-- Select option 2 for GUI mode
+- Double-click `play.sh` (or right-click → Open With → Terminal)
+- Or run: `./play.sh` or `python play.py`
+- The GUI window will open automatically!
 
 ### Method 2: Direct Launch
 
